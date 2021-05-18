@@ -1,17 +1,12 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
 title: "assignment"
-author: "jackson lane"
+author: "jackson lane 45889082"
 date: "17/05/2021"
 output: pdf_document
 ```{r include=FALSE}
 surg = read.table("surg.dat",header = TRUE)
 ```
 
-```{r echo=FALSE}
+```{r include=FALSE}
 plot(surg)
 ```
 Gender variable appears to be categorical based off the scatterplot.
@@ -257,8 +252,6 @@ p value is insignificant assumption not valid.
 
 conclusion
 The effect of driver and car on fuel efficiency insignificant however individual interactions of car and drive separately on fuel efficiency are significant.
-
 The interaction plot shows that there is no strong interaction between variables.
-
 would need to reject alternate hypothesis for overall effect of car and driver on fuel efficiency.
 
