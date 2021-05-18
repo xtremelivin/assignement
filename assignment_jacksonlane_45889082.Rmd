@@ -1,24 +1,28 @@
-title: "assignment"
-author: "jackson lane 45889082"
-date: "17/05/2021"
+Applied Stastics assignement.
+
+The following assignement will be looking at two cases the survival time of patients who recieve liver surgery and relationships between variables. the second case will be looking at the effect of drivers and cars on fuel efficency. Polynominal multiple regression will be used and quadtratic fits, and some logarithim.The two way anova test will also be used.
+
+author: jackson lane 45889082
+date: 17/05/2021
 output:pdf_document: default
 
 ```{r include=FALSE}
 surg = read.table("surg.dat",header = TRUE)
 ```
+Scatterplot of surg data.
 ```{r echo=FALSE}
 plot(surg)
 ```
 Gender variable appears to be categorical based off the scatterplot.
 Liver and survival have a slightly linear relationship, also enzyme and survival also have a slight linear relationship.
 the correlation matrix will not work because gender is categorical variable and correlation matrix requires numeric variables.
-
+The gender variable will be removed to continue testing.
 ```{r include=FALSE}
 surgclean <- surg
 surgclean <- surg[,-6]
 ```
 
-```{r include=FALSE}
+```{r echo=FALSE}
 cor(surgclean)
 ```
 There is a strong  positive correlation between survival and every variable besides age that has a negative correlation.
@@ -31,8 +35,8 @@ summary(surg.1)
 ```{r include=FALSE}
 par(mfrow = c(1, 2))
 ```
-
-```{r}
+scatter plot of surg data after removing gender.
+```{r echo=FALSE}
 plot(surg.1, which = 1:2)
 ```
 ```{r include=FALSE}
@@ -47,10 +51,9 @@ The Fitted vs residuals has a significant curvature indicating it may not be nor
 The normal QQ plot also has a slight curvature indicating the relationship may not be linear, however there is an outlier and this may be the cause for the curvature.
 the residuals vs predictors look concentrated could be a potential pattern.
 
-
-mathematical equation
+polynominal regression model
 $$Y = \beta_0+\beta_1x_1+\beta_2x_2+\beta_3x_3+\beta_4x_4+\beta_5x_5+\epsilon;\epsilon \sim N(0,\sigma^2)$$
- defining parameters
+defining parameters
 $$Y_i = survival$$
 $$X_1 = blood$$
 $$X_2 = prognosis$$
@@ -80,7 +83,7 @@ age still does not have a significant p value need to remove.
 ```{r include=FALSE}
 surg.3 = lm(survival~blood+prognosis+enzyme, data = surg)
 ```
-```{r}
+```{r echo=FALSE}
 anova(surg.3)
 ```
 checking diagnostics
@@ -90,18 +93,18 @@ par(mfrow = c(1, 2))
 ```{r echo=FALSE}
 plot(surg.3, which = 1:2)
 ```
-the Residauls vs fitted and QQplot still have curvatures.
+after the removal of the liver and age variables due to insiginifcant p-values, the Residauls vs fitted and QQplot still have curvatures.
 
 compute F stat
 
-```{r echo=FALSE}
+```{r}
 totalregSS = 1005152+1278496+3442172+57862+33032
 regms <- totalregSS/5
 resms <-53183
 ftest= regms/resms
 ftest
 ```
-the null distribution is that none of the predictor variables have an effect on survival time from liver #operation.
+the null distribution is that none of the predictor variables have an effect on survival time from a liver operation.
 
 
 conclusion.
@@ -109,6 +112,7 @@ After backwise step method all predictor variables have significant p values.
 The F static is greater than the p value meaning we need to reject null hypothesis.
 Contextually the removal of liver and age variables is not correct because they are dependent variables
 the outliers from survival look to have created a curvature in the residuals vs fitted and normal QQ plot.
+The null hypothesis would be rejected.
 ```{r include=FALSE}
 surgliver=lm(survival~liver+I(liver^2)+I(liver^3)+I(liver^4), data = surgclean)
 ```
@@ -121,7 +125,7 @@ surgage=lm(survival~age+I(age^2)+I(age^3)+I(age^3)+I(age^4)+I(age^5)+I(age^6), d
 ```{r echo=FALSE}
 anova(surgage)
 ```
-fitting the model with quadratic model
+fitting the model with a quadratic model
 ```{r include=FALSE}
 surgquad = lm(survival~blood+prognosis+enzyme+I(liver^4), data =surgclean)
 ```
@@ -131,6 +135,7 @@ anova(surgquad)
 ```{r echo=FALSE}
 plot(surgquad, which = 1:2)
 ```
+
 It is not appropriate to use the multiple regression model because the assumptions have not been met all of the QQplots are not linear and the residuals vs fitted all have curvature.
 ```{r include=FALSE}
 surgclean$survival = log(surgclean$survival)
@@ -143,7 +148,7 @@ plot(surglog)
 ```{r echo=FALSE}
 pairs(survival~blood+prognosis+enzyme+liver+age, data = surgclean, panel = panel.smooth)
 ```
-```{r}
+```{r echo=FALSE}
 par(mfrow = c(2, 2))
 ```
 ```{r echo=FALSE}
@@ -172,14 +177,14 @@ design is balanced we can see from looking at the table there is an equal amount
 ```{r echo=FALSE}
 boxplot(kmL~driver+car, data = kml)
 ```
-variances do not look to be equal, and the averages have a large variance between variables.
+The variances do not look to be equal, and the means have a large variance between variables.
 ```{r echo=FALSE}
 interaction.plot(kml$car,kml$driver,kml$kmL)
 ```
 ```{r echo=FALSE}
 interaction.plot(kml$driver,kml$car,kml$kmL)
 ```
-The lines are parallel indicating a lack of interaction occurring between variables.
+The lines are parallel indicating a lack of interaction occurring between variables in both interaction plots
 
 anova two way model
 $$ Y{ijk}\ = \mu+\alpha_i+\beta_j+\gamma_ij+\epsilon_ijk$$
@@ -197,13 +202,13 @@ The interaction
 $$H~0~:\gamma_ij = 0\\H~A~:\gamma_ij\neq 0$$
 Main effect of driver
 $$H~0~:\alpha_i = 0\\H~A~:\alpha_i\neq 0$$
-main effect of car
+Main effect of car
 $$H~0~:\beta_j = 0\\H~A~:\beta_j\neq 0$$
 ```{r echo=FALSE}
 kmlanova = aov(kmL~driver+car+driver:car, data = kml)
 ```
 
-```{r echo=TRUE}
+```{r echo=FALSE}
 anova(kmlanova)
 ```
 
@@ -219,18 +224,18 @@ interaction is not significant because p value is not significant
 ```{r echo=FALSE}
 kmlanova.1 = aov(kmL~driver+car, data = kml)
 ```
-
+Driver and car interaction.
 ```{r echo=FALSE}
 anova(kmlanova.1)
 ```
 Driver effect
-
 $$model = \mu+\alpha_i+\beta_j+\gamma_ij$$
 
 $$Hypothese\\H~0~:\alpha_i = 0\\H~A~:\alpha_i\neq 0$$
+
 P value = 0.00000000000000022 > 0.05
-  
 driver type is significant
+
 Car effect
   
 $$ model = \mu+\alpha_i+\beta_j+\gamma_ij$$
@@ -241,13 +246,13 @@ p value = 0.00000000000000022 > 0.05
   
 car type is significant
 
-```{r}
+```{r echo=FALSE}
 plot(kmlanova.1)
 ```
 residuals look to be normally distributed.
 assumption of normal distribution looks to be valid.
-
 p value is insignificant assumption not valid.
+
 
 conclusion
 The effect of driver and car on fuel efficiency insignificant however individual interactions of car and drive separately on fuel efficiency are significant.
