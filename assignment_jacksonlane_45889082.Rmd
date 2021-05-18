@@ -1,8 +1,7 @@
 title: "assignment"
 author: "jackson lane 45889082"
 date: "17/05/2021"
-output:
-  pdf_document: default
+output:pdf_document: default
 
 ```{r include=FALSE}
 surg = read.table("surg.dat",header = TRUE)
@@ -11,8 +10,7 @@ surg = read.table("surg.dat",header = TRUE)
 plot(surg)
 ```
 Gender variable appears to be categorical based off the scatterplot.
-Liver and survival have a slightly linear relationship. also enzyme and survival also have a slight linear relationship.
-
+Liver and survival have a slightly linear relationship, also enzyme and survival also have a slight linear relationship.
 the correlation matrix will not work because gender is categorical variable and correlation matrix requires numeric variables.
 
 ```{r include=FALSE}
@@ -52,15 +50,15 @@ the residuals vs predictors look concentrated could be a potential pattern.
 
 mathematical equation
 $$Y = \beta_0+\beta_1x_1+\beta_2x_2+\beta_3x_3+\beta_4x_4+\beta_5x_5+\epsilon;\epsilon \sim N(0,\sigma^2)$$
-  defining parameters
+ defining parameters
 $$Y_i = survival$$
-  $$X_1 = blood$$
-  $$X_2 = prognosis$$
-  $$X_3 = enzyme$$
-  $$X_4 = liver$$
-  $$X_5 = age$$
-  $$Hypothesis\\H~0~:\beta_1 = \beta_2 =\beta_3=\beta_4=\beta_5=  0 \\H~1~ : \beta_i\not= 0$$
-  produce anova table
+$$X_1 = blood$$
+$$X_2 = prognosis$$
+$$X_3 = enzyme$$
+$$X_4 = liver$$
+$$X_5 = age$$
+$$Hypothesis\\H~0~:\beta_1 = \beta_2 =\beta_3=\beta_4=\beta_5=  0 \\H~1~ : \beta_i\not= 0$$
+produce anova table
 ```{r include=FALSE}
 surg.1 = lm(survival~blood+prognosis+enzyme+liver+age, data = surg)
 ```
@@ -103,12 +101,12 @@ resms <-53183
 ftest= regms/resms
 ftest
 ```
-the null distribution is that none of the predictor #variables have an effect on survival time from liver #operation.
+the null distribution is that none of the predictor variables have an effect on survival time from liver #operation.
 
 
 conclusion.
 After backwise step method all predictor variables have significant p values.
-The F static is greater than the p value meaning we need #to reject null hypothesis.
+The F static is greater than the p value meaning we need to reject null hypothesis.
 Contextually the removal of liver and age variables is not correct because they are dependent variables
 the outliers from survival look to have created a curvature in the residuals vs fitted and normal QQ plot.
 ```{r include=FALSE}
