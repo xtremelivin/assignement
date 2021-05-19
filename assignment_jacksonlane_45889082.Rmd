@@ -3,8 +3,12 @@ Applied Stastics assignement.
 The following assignement will be looking at two cases the survival time of patients who recieve liver surgery and relationships between variables. the second case will be looking at the effect of drivers and cars on fuel efficency. Polynominal multiple regression will be used and quadtratic fits, and some logarithim.The two way anova test will also be used.
 
 author: jackson lane 45889082
+
 date: 17/05/2021
+
 output:pdf_document: default
+
+github:https://github.com/xtremelivin/assignement.git
 
 ```{r include=FALSE}
 surg = read.table("surg.dat",header = TRUE)
@@ -13,8 +17,9 @@ Scatterplot of surg data.
 ```{r echo=FALSE}
 plot(surg)
 ```
-Gender variable appears to be categorical based off the scatterplot.
-Liver and survival have a slightly linear relationship, also enzyme and survival also have a slight linear relationship.
+Gender variable appears to be categorical based off the scatterplot pattern all data is on either side indicating its relationship with all other variables is categorised.
+Liver is moderately correlated to enzyme, and a slight correlation with prognosis & blood. Livers has no correlation with age and gender, has a moderate correlation with survival.
+Survival has a strong correlation with prognosis, enzyme and liver. It has a slight correlation with blood & age.
 the correlation matrix will not work because gender is categorical variable and correlation matrix requires numeric variables.
 The gender variable will be removed to continue testing.
 ```{r include=FALSE}
@@ -25,7 +30,13 @@ surgclean <- surg[,-6]
 ```{r echo=FALSE}
 cor(surgclean)
 ```
-There is a strong  positive correlation between survival and every variable besides age that has a negative correlation.
+There is a a moderate  positive correlation between survival and every variable besides age that has a negative correlation.
+Age has a negative correlation with all other variables, this makes sense because a higher age should mean worse blood, prognosis, enzyme and liver.
+Liver has moderate positive correlation between all other variables.
+Enzyme has a noteable minor negative correlation with blood and prognosis.
+Prognosis has a strong correlation with liver. Blood also has a strong correlation with liver.
+Liver has the most significant correlations with other variables.
+
 ```{r include=FALSE}
 surg.1 = lm(survival~blood+prognosis+enzyme+liver+age,data= surg)
 ```
@@ -47,8 +58,8 @@ plot(resid(surg.1)~blood+prognosis+enzyme+liver+age, data = surg)
 ```
 
 checking assumptions.
-The Fitted vs residuals has a significant curvature indicating it may not be normally distributed
-The normal QQ plot also has a slight curvature indicating the relationship may not be linear, however there is an outlier and this may be the cause for the curvature.
+The Fitted vs residuals has a minor curvature indicating it may not be normally distributed likey not a discerning pattern though, should be okay.
+The normal QQ plot also has a major curvature indicating the relationship is not linear, however there is an outlier and this may be the cause for the curvature.
 the residuals vs predictors look concentrated could be a potential pattern.
 
 polynominal regression model
@@ -71,7 +82,7 @@ anova(surg.1)
 Liver and age don't have significant p values.
 will remove liver because has the highest p value and check diagnostics.
 ```{r}
-totalregSS = 1005152+1278496+3442172+57862+33032
+combined regression SS = 1005152+1278496+3442172+57862+33032
 ```
 ```{r include=FALSE}
 surg.2 = lm(survival~blood+prognosis+enzyme+age, data = surg)
@@ -79,6 +90,7 @@ surg.2 = lm(survival~blood+prognosis+enzyme+age, data = surg)
 ```{r echo=FALSE}
 anova(surg.2)
 ```
+The removal of liver reduced ages P-value significantly 
 age still does not have a significant p value need to remove.
 ```{r include=FALSE}
 surg.3 = lm(survival~blood+prognosis+enzyme, data = surg)
@@ -93,18 +105,24 @@ par(mfrow = c(1, 2))
 ```{r echo=FALSE}
 plot(surg.3, which = 1:2)
 ```
-after the removal of the liver and age variables due to insiginifcant p-values, the Residauls vs fitted and QQplot still have curvatures.
+```{r echo=FALSE}
+plot(resid(surg.3)~blood+prognosis+enzyme, data = surg)
+```
+checking assumptions after the removal of the liver and age variables due to insiginifcant p-values. the Residauls vs fitted still has a minor curvature. QQplot is still not linear due to outliers.
+Fitted values looks to be normally distrubted. Blood and prognosis residuals look concentrated could be a pattern.
 
-compute F stat
+computing F stat
 
-```{r}
+```{recho=FALSE}
 totalregSS = 1005152+1278496+3442172+57862+33032
+```
+```{r}
 regms <- totalregSS/5
 resms <-53183
-ftest= regms/resms
+ftest = regms/resms
 ftest
 ```
-the null distribution is that none of the predictor variables have an effect on survival time from a liver operation.
+the null distribution is the probability of distrubtion of the F statisic when the null hypothesis is true. The null hypothesis is that predictors blood, prognosis, enzyme, liver and age do not have an effect on survival.
 
 
 conclusion.
